@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TypeSafeAI.Sdk.Api;
-using TypeSafeAI.Sdk.Services;
 using ZeroAlloc.Rest.SystemTextJson;
 
 namespace TypeSafeAI.Sdk.DependencyInjection;
@@ -18,7 +17,7 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations();
 
         services
-            .AddITypeSafeApiClient(options =>
+            .AddITypeSafeClient(options =>
             {
                 options.BaseAddress = new Uri("https://api.typesafe.ai");
                 options.UseSerializer<SystemTextJsonSerializer>();
@@ -27,9 +26,8 @@ public static class ServiceCollectionExtensions
             {
                 var sdkOptions = serviceProvider.GetRequiredService<IOptions<TypeSafeOptions>>().Value;
                 client.BaseAddress = sdkOptions.BaseAddress;
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
             });
-
-        services.AddTransient<ITypeSafeClient, TypeSafeClient>();
 
         return services;
     }

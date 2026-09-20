@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
-using TypeSafeAI.Sdk.Services;
 
 var apiKey = Environment.GetEnvironmentVariable("TYPESAFE_API_KEY") ?? string.Empty;
 
