@@ -25,7 +25,6 @@ public static class ServiceCollectionExtensions
             .ConfigureHttpClient((serviceProvider, client) =>
             {
                 var sdkOptions = serviceProvider.GetRequiredService<IOptions<TypeSafeOptions>>().Value;
-                client.BaseAddress = sdkOptions.BaseAddress;
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
             });
 

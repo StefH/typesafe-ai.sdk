@@ -22,7 +22,7 @@ using var host = builder.Build();
 
 var client = host.Services.GetRequiredService<ITypeSafeClient>();
 
-var request = new EvaluateRequest
+var requestNoul = new EvaluateRequest
 {
     State = "Help! My payouts have been failing for 3 days.",
     Model = "jev-latest",
@@ -35,12 +35,77 @@ var request = new EvaluateRequest
     },
 };
 
-var response = await client.EvaluateAsync(request);
+var responseNoul = await client.EvaluateAsync(requestNoul);
 
-if (response.Answers.TryGetValue("is_urgent", out var answer))
+if (responseNoul.Answers.TryGetValue("is_urgent", out var answerNoul))
 {
-    Console.WriteLine($"Urgency score: {answer.Noul:0.###}");
+    Console.WriteLine($"Type:       {answerNoul.Type}");
+    Console.WriteLine($"Noul:       {answerNoul.Noul:0.###}");
+    Console.WriteLine($"Confidence: {answerNoul.Confidence:0.###}");
 }
 
-Console.WriteLine($"Model: {response.Model}");
-Console.WriteLine($"Usage: in={response.Usage.InputTokens}, out={response.Usage.OutputTokens}");
+Console.WriteLine($"Model: {responseNoul.Model}");
+Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}, OutputTokens={responseNoul.Usage.OutputTokens}");
+
+Console.WriteLine(new string('-', 80));
+
+var requestChoice = new EvaluateRequest
+{
+    State = "My running shoes arrived in the wrong size. Can I swap them for a size 10?",
+    Model = "jev-latest",
+    Questions = new Dictionary<string, Question>
+    {
+        ["instructions"] = Question.Choice(
+            "Which team should handle this?",
+            criteria: new Dictionary<string, object?>
+            {
+                ["returns"] = "Exchanges, wrong or damaged items",
+                ["shipping"] = "Delivery status, delays, lost packages",
+                ["billing"] = "Charges, invoices, payment problems"
+            })
+    },
+};
+
+var responseChoice = await client.EvaluateAsync(requestChoice);
+
+if (responseChoice.Answers.TryGetValue("instructions", out var answerChoice))
+{
+    Console.WriteLine($"Type:       {answerChoice.Type}");
+    Console.WriteLine($"Choice:     {answerChoice.Choice}");
+    Console.WriteLine($"Confidence: {answerChoice.Confidence:0.###}");
+}
+
+Console.WriteLine($"Model: {responseChoice.Model}");
+Console.WriteLine($"Usage: InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
+
+Console.WriteLine(new string('-', 80));
+
+
+var requestScore = new EvaluateRequest
+{
+    State = "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari.",
+    Model = "jev-latest",
+    Questions = new Dictionary<string, Question>
+    {
+        ["bug_severity"] = Question.Score(
+            "How severe is the reported issue?",
+            criteria:
+            [
+                "Cosmetic; no impact to functionality",
+                "Broken or degraded feature, but workaround exists",
+                "Blocking issue; no workaround exists"
+            ])
+    },
+};
+
+var responseScore = await client.EvaluateAsync(requestScore);
+
+if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
+{
+    Console.WriteLine($"Type:       {answerScore.Type}");
+    Console.WriteLine($"Score:      {answerScore.Score}");
+    Console.WriteLine($"Confidence: {answerScore.Confidence:0.###}");
+}
+
+Console.WriteLine($"Model: {responseScore.Model}");
+Console.WriteLine($"Usage: InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");

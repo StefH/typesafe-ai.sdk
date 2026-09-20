@@ -22,15 +22,15 @@ public sealed class Question
             _ => new Dictionary<string, object?>
             {
                 ["true"] = yesCriteria,
-                ["false"] = noCriteria,
-            },
+                ["false"] = noCriteria
+            }
         };
 
         return new Question
         {
             Type = "noul",
             Instructions = instructions,
-            Criteria = criteria,
+            Criteria = criteria
         };
     }
 
@@ -38,13 +38,13 @@ public sealed class Question
     {
         Type = "choice",
         Instructions = instructions,
-        Criteria = criteria,
+        Criteria = criteria
     };
 
     public static Question Score(object instructions, IReadOnlyList<object> criteria) => new()
     {
         Type = "score",
         Instructions = instructions,
-        Criteria = criteria,
+        Criteria = criteria
     };
 }
