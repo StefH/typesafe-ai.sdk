@@ -1,11 +1,15 @@
-# typesafe-ai.sdk
-**.NET** SDK for TypeSafe AI
+# TypeSafe-AI.Sdk
+
+## Example
+``` csharp
+// todo
+```
 
 ---
 
-## Sponsors
+### Sponsors
 
-[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of **typesafe-ai.sdk**.
+[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of ****TypeSafe-AI.Sdk****.
 
 [![Entity Framework Extensions](https://raw.githubusercontent.com/StefH/resources/main/sponsor/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert?utm_source=StefH)
 

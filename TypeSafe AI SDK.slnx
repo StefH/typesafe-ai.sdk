@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples/TypeSafe-AI.Sdk.Example/TypeSafe-AI.Sdk.Example.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TypeSafe-AI.Sdk/TypeSafe-AI.Sdk.csproj" />
+  </Folder>
+</Solution>
