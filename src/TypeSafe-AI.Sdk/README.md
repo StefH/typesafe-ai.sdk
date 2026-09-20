@@ -1,8 +1,4 @@
-# typesafe-ai.sdk
-**.NET** SDK for TypeSafe AI
-
-## Package
-[![TypeSafeAI.Sdk](https://img.shields.io/nuget/v/TypeSafe-AI.Sdk)](https://www.nuget.org/packages/TypeSafe-AI.Sdk)
+# TypeSafe-AI.Sdk
 
 ## Examples
 
@@ -27,7 +23,7 @@ using var host = builder.Build();
 var client = host.Services.GetRequiredService<ITypeSafeClient>();
 ```
 
-### Create a Noul request
+### Create a Noulrequest
 ``` csharp
 var requestNoul = new EvaluateRequest
 {
@@ -121,9 +117,9 @@ Console.WriteLine($"Usage: InputTokens={responseScore.Usage.InputTokens}, Output
 
 ---
 
-## Sponsors
+### Sponsors
 
-[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of **typesafe-ai.sdk**.
+[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of ****TypeSafe-AI.Sdk****.
 
 [![Entity Framework Extensions](https://raw.githubusercontent.com/StefH/resources/main/sponsor/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert?utm_source=StefH)
 

@@ -1,13 +1,9 @@
-# typesafe-ai.sdk
-**.NET** SDK for TypeSafe AI
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TypeSafeAI.Sdk.Api;
+using TypeSafeAI.Sdk.Contracts;
+using TypeSafeAI.Sdk.DependencyInjection;
 
-## Package
-[![TypeSafeAI.Sdk](https://img.shields.io/nuget/v/TypeSafe-AI.Sdk)](https://www.nuget.org/packages/TypeSafe-AI.Sdk)
-
-## Examples
-
-### Register
-``` csharp
 var apiKey = Environment.GetEnvironmentVariable("TYPESAFE_API_KEY") ?? string.Empty;
 
 if (string.IsNullOrWhiteSpace(apiKey))
@@ -25,10 +21,7 @@ builder.Services.AddTypeSafeSdk(options =>
 using var host = builder.Build();
 
 var client = host.Services.GetRequiredService<ITypeSafeClient>();
-```
 
-### Create a Noul request
-``` csharp
 var requestNoul = new EvaluateRequest
 {
     State = "Help! My payouts have been failing for 3 days.",
@@ -53,10 +46,9 @@ if (responseNoul.Answers.TryGetValue("is_urgent", out var answerNoul))
 
 Console.WriteLine($"Model: {responseNoul.Model}");
 Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}, OutputTokens={responseNoul.Usage.OutputTokens}");
-```
 
-### Create a Choice request
-``` csharp
+Console.WriteLine(new string('-', 80));
+
 var requestChoice = new EvaluateRequest
 {
     State = "My running shoes arrived in the wrong size. Can I swap them for a size 10?",
@@ -85,10 +77,10 @@ if (responseChoice.Answers.TryGetValue("instructions", out var answerChoice))
 
 Console.WriteLine($"Model: {responseChoice.Model}");
 Console.WriteLine($"Usage: InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
-```
 
-### Create a Score request
-``` csharp
+Console.WriteLine(new string('-', 80));
+
+
 var requestScore = new EvaluateRequest
 {
     State = "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari.",
@@ -117,14 +109,3 @@ if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
 
 Console.WriteLine($"Model: {responseScore.Model}");
 Console.WriteLine($"Usage: InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
-```
-
----
-
-## Sponsors
-
-[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=StefH) and [Dapper Plus](https://dapper-plus.net/?utm_source=StefH) are major sponsors and proud to contribute to the development of **typesafe-ai.sdk**.
-
-[![Entity Framework Extensions](https://raw.githubusercontent.com/StefH/resources/main/sponsor/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert?utm_source=StefH)
-
-[![Dapper Plus](https://raw.githubusercontent.com/StefH/resources/main/sponsor/dapper-plus-sponsor.png)](https://dapper-plus.net/bulk-insert?utm_source=StefH)
