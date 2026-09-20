@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix>preview-04</VersionSuffix>
+    <VersionSuffix>preview-05</VersionSuffix>
     <RootNamespace>TypeSafeAI.Sdk</RootNamespace>
     <Authors>Stef Heyenrath</Authors>
     <Company>TypeSafe-AI.Sdk</Company>
