@@ -121,8 +121,8 @@ if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerScore.Probabilities, options)}");
 }
 
-Console.WriteLine($"Model:          {responseScore.Model}");
-Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
+Console.WriteLine($"Model:         {responseScore.Model}");
+Console.WriteLine($"Usage:         InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
 ```
 
 ---
