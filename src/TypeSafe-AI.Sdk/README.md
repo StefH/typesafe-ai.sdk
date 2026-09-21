@@ -12,6 +12,8 @@ if (string.IsNullOrWhiteSpace(apiKey))
     return;
 }
 
+var options = new JsonSerializerOptions { WriteIndented = true };
+
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddTypeSafeSdk(options =>
 {
@@ -23,7 +25,7 @@ using var host = builder.Build();
 var client = host.Services.GetRequiredService<ITypeSafeClient>();
 ```
 
-### Create a Noulrequest
+### Create a Noul request
 ``` csharp
 var requestNoul = new EvaluateRequest
 {
@@ -40,11 +42,12 @@ var requestNoul = new EvaluateRequest
 
 var responseNoul = await client.EvaluateAsync(requestNoul);
 
+Console.WriteLine($"State: {requestNoul.State}");
+
 if (responseNoul.Answers.TryGetValue("is_urgent", out var answerNoul))
 {
-    Console.WriteLine($"Type:       {answerNoul.Type}");
-    Console.WriteLine($"Noul:       {answerNoul.Noul:0.###}");
-    Console.WriteLine($"Confidence: {answerNoul.Confidence:0.###}");
+    Console.WriteLine($"Type:  {answerNoul.Type}");
+    Console.WriteLine($"Noul:  {answerNoul.Noul:0.###}");
 }
 
 Console.WriteLine($"Model: {responseNoul.Model}");
@@ -72,15 +75,18 @@ var requestChoice = new EvaluateRequest
 
 var responseChoice = await client.EvaluateAsync(requestChoice);
 
+Console.WriteLine($"State:         {requestChoice.State}");
+
 if (responseChoice.Answers.TryGetValue("instructions", out var answerChoice))
 {
-    Console.WriteLine($"Type:       {answerChoice.Type}");
-    Console.WriteLine($"Choice:     {answerChoice.Choice}");
-    Console.WriteLine($"Confidence: {answerChoice.Confidence:0.###}");
+    Console.WriteLine($"Type:          {answerChoice.Type}");
+    Console.WriteLine($"Choice:        {answerChoice.Choice}");
+    Console.WriteLine($"Confidence:    {answerChoice.Confidence:0.###}");
+    Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerChoice.Probabilities, options)}");
 }
 
-Console.WriteLine($"Model: {responseChoice.Model}");
-Console.WriteLine($"Usage: InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
+Console.WriteLine($"Model:          {responseChoice.Model}");
+Console.WriteLine($"Usage:          InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
 ```
 
 ### Create a Score request
@@ -104,15 +110,19 @@ var requestScore = new EvaluateRequest
 
 var responseScore = await client.EvaluateAsync(requestScore);
 
+Console.WriteLine($"State:         {requestScore.State}");
+
 if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
 {
-    Console.WriteLine($"Type:       {answerScore.Type}");
-    Console.WriteLine($"Score:      {answerScore.Score}");
-    Console.WriteLine($"Confidence: {answerScore.Confidence:0.###}");
+    Console.WriteLine($"Type:          {answerScore.Type}");
+    Console.WriteLine($"Score:         {answerScore.Score}");
+    Console.WriteLine($"Confidence:    {answerScore.Confidence:0.###}");
+    Console.WriteLine($"Legend:        {JsonSerializer.Serialize(answerScore.Legend, options)}");
+    Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerScore.Probabilities, options)}");
 }
 
-Console.WriteLine($"Model: {responseScore.Model}");
-Console.WriteLine($"Usage: InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
+Console.WriteLine($"Model:          {responseScore.Model}");
+Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
 ```
 
 ---
