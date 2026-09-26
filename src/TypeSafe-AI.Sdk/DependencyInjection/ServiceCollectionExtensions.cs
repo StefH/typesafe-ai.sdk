@@ -16,15 +16,16 @@ public static class ServiceCollectionExtensions
             .Configure(configure)
             .ValidateDataAnnotations();
 
+        var sdkOptions = services.BuildServiceProvider().GetRequiredService<IOptions<TypeSafeOptions>>().Value;
+
         services
             .AddITypeSafeClient(options =>
             {
-                options.BaseAddress = new Uri("https://api.typesafe.ai");
+                options.BaseAddress = sdkOptions.BaseAddress;
                 options.UseSerializer<SystemTextJsonSerializer>();
             })
             .ConfigureHttpClient((serviceProvider, client) =>
             {
-                var sdkOptions = serviceProvider.GetRequiredService<IOptions<TypeSafeOptions>>().Value;
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
             });
 

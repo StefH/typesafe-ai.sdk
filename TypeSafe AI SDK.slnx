@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/examples/">
+    <Project Path="examples/Llm.Example/Llm.Example.csproj" />
+    <Project Path="examples/Local.Example/Local.Example.csproj" />
     <Project Path="examples/TypeSafe-AI.Sdk.Example/TypeSafe-AI.Sdk.Example.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
