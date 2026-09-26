@@ -48,7 +48,7 @@ if (responseNoul.Answers.TryGetValue("is_urgent", out var answerNoul))
     Console.WriteLine($"Noul:  {answerNoul.Noul:0.###}");
 }
 
-Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}, OutputTokens={responseNoul.Usage.OutputTokens}");
+Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -80,7 +80,7 @@ if (responseChoice.Answers.TryGetValue("instructions", out var answerChoice))
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerChoice.Probabilities, options)}");
 }
 
-Console.WriteLine($"Usage:          InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={responseChoice.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -113,7 +113,7 @@ if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerScore.Probabilities, options)}");
 }
 
-Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -135,11 +135,9 @@ var dinoChoice = new EvaluateRequest
     {
         ["MANEUVER_QUESTION"] = Question.Choice(
             """
-            Choose the single safest maneuver for the dinosaur to avoid,
-            the target obstacle and continue running.
-            The dinosaur motion in the state is only what it was doing when the
-            distant obstacle was first observed; do not assume that motion will
-            still be active when the obstacle arrives.
+            Choose the single safest maneuver for the dinosaur to avoid, the target obstacle and continue running.
+            The dinosaur motion in the state is only what it was doing when the distant obstacle was first observed;
+            do not assume that motion will still be active when the obstacle arrives.
             Choose only the maneuver type. Browser code will handle the exact timing.
             """,
             criteria: new Dictionary<string, object?>
@@ -185,6 +183,6 @@ if (dinoResponseChoice.Answers.TryGetValue("JUMP_PROFILE_QUESTION", out var jump
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(jumpProfileChoice.Probabilities, options)}");
 }
 
-Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}, OutputTokens={dinoResponseChoice.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
