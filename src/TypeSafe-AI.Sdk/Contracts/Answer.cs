@@ -18,7 +18,7 @@ public sealed class Answer
     /// </summary>
     [JsonPropertyName("noul")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? Noul { get; init; }
+    public float? Noul { get; init; }
 
     /// <summary>
     /// The highest-probability option.
