@@ -7,6 +7,12 @@ namespace TypeSafeAI.Sdk.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the TypeSafe SDK to the service collection with the specified configuration.
+    /// </summary>
+    /// <param name="services">The service collection to add the SDK to.</param>
+    /// <param name="configure">An action to configure the TypeSafeOptions.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddTypeSafeSdk(this IServiceCollection services, Action<TypeSafeOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
