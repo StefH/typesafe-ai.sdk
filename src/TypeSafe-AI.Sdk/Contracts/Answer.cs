@@ -32,14 +32,14 @@ public sealed class Answer
     /// </summary>
     [JsonPropertyName("score")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? Score { get; init; }
+    public float? Score { get; init; }
 
     /// <summary>
     /// How certain the model is, derived from probabilities.
     /// </summary>
     [JsonPropertyName("confidence")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? Confidence { get; init; }
+    public float? Confidence { get; init; }
 
     /// <summary>
     /// Each level number mapped back to its description.
@@ -53,5 +53,5 @@ public sealed class Answer
     /// </summary>
     [JsonPropertyName("probabilities")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, double>? Probabilities { get; init; }
+    public Dictionary<string, float>? Probabilities { get; init; }
 }
