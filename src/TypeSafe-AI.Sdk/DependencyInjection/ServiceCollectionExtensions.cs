@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
                 options.BaseAddress = sdkOptions.BaseAddress;
                 options.UseSerializer<SystemTextJsonSerializer>();
             })
-            .ConfigureHttpClient((serviceProvider, client) =>
+            .ConfigureHttpClient(client =>
             {
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
             });
