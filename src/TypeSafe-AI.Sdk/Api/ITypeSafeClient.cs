@@ -10,11 +10,11 @@ namespace TypeSafeAI.Sdk.Api;
 public interface ITypeSafeClient
 {
     /// <summary>
-    /// Evaluate a <c>state</c> against a map of typed <c>questions</c> and get back structured <c>answers</c>, one per question.
+    /// Evaluate a <c>state</c> against a map of typed <c>Questions</c> and get back structured <c>Answers</c>, one per question.
     /// </summary>
     /// <param name="body">The top-level shape of every request.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>One answer per question, returned under the same ids you provided.</returns>
+    /// <param name="cancellationToken">The optional cancellation token.</param>
+    /// <returns>One answer per question.</returns>
     [Post("/v1/systemone")]
     Task<EvaluateResponse> EvaluateAsync([Body] EvaluateRequest body, CancellationToken cancellationToken = default);
 }
