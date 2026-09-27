@@ -121,17 +121,17 @@ Console.WriteLine(new string('-', 80));
 
 var dinoChoice = new EvaluateRequest
 {
-    State = new 
+    State = new
     {
-      speed = 4.42,
-      speedMode = "slow",
-      dinosaurMotion = "running",
-      obstacle = new
-      {
-        kind = "large_cactus",
-        group = "double",
-        flightPath = "ground_hazard"
-      }
+        speed = 4.42f,
+        speedMode = "slow",
+        dinosaurMotion = "running",
+        obstacle = new
+        {
+            kind = "large_cactus",
+            group = "double",
+            flightPath = "ground_hazard"
+        }
     },
     Questions = new Dictionary<string, Question>
     {
