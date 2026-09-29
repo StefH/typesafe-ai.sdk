@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
+using TypeSafeAI.Sdk.Example;
 
 var apiKey = Environment.GetEnvironmentVariable("TYPESAFE_API_KEY") ?? string.Empty;
 
@@ -190,3 +191,6 @@ if (dinoResponseChoice.Answers.TryGetValue("jump_profile", out var jumpProfileCh
 Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}, OutputTokens={dinoResponseChoice.Usage.OutputTokens}");
 
 Console.WriteLine(new string('-', 80));
+
+var tester = new PromptInjectionTester(client);
+await tester.RunsTestsAsync();
