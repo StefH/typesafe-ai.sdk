@@ -35,7 +35,7 @@ internal sealed class PromptInjectionTester(ITypeSafeClient client)
             var requestNouls = new EvaluateRequest
             {
                 State = example,
-                Questions = PromptInjectionNouls.TechniquesQuestions
+                Questions = PromptInjectionQuestions.Techniques
             };
 
             var responseNoulResponse = await client.EvaluateAsync(requestNouls);
