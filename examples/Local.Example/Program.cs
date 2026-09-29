@@ -5,11 +5,11 @@ using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
 
-var apiKey = Environment.GetEnvironmentVariable("TYPESAFE_API_KEY") ?? string.Empty;
+var apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY") ?? string.Empty;
 
 if (string.IsNullOrWhiteSpace(apiKey))
 {
-    Console.WriteLine("Please set TYPESAFE_API_KEY before running the example.");
+    Console.WriteLine("Please set UNSLOTH_API_KEY before running the example.");
     return;
 }
 
@@ -18,7 +18,7 @@ var options = new JsonSerializerOptions { WriteIndented = true };
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddTypeSafeSdk(options =>
 {
-    options.BaseAddress = new Uri("http://localhost:8000");
+    options.BaseAddress = new Uri("http://localhost:8888");
     options.ApiKey = apiKey;
 });
 
@@ -133,7 +133,7 @@ var dinoChoice = new EvaluateRequest
     },
     Questions = new Dictionary<string, Question>
     {
-        ["MANEUVER_QUESTION"] = Question.Choice(
+        ["maneuver"] = Question.Choice(
             """
             Choose the single safest maneuver for the dinosaur to avoid, the target obstacle and continue running.
             The dinosaur motion in the state is only what it was doing when the distant obstacle was first observed;
@@ -148,7 +148,7 @@ var dinoChoice = new EvaluateRequest
             }
         ),
 
-        ["JUMP_PROFILE_QUESTION"] = Question.Choice(
+        ["jump_profile"] = Question.Choice(
             """
             Assume the safest maneuver is to jump.
             Choose the jump trajectory that best clears the target obstacle.
@@ -167,7 +167,7 @@ var dinoResponseChoice = await client.EvaluateAsync(dinoChoice);
 
 Console.WriteLine($"State:         {dinoChoice.State}");
 
-if (dinoResponseChoice.Answers.TryGetValue("MANEUVER_QUESTION", out var maneuverChoice))
+if (dinoResponseChoice.Answers.TryGetValue("maneuver", out var maneuverChoice))
 {
     Console.WriteLine($"Type:          {maneuverChoice.Type}");
     Console.WriteLine($"Choice:        {maneuverChoice.Choice}");
@@ -175,7 +175,7 @@ if (dinoResponseChoice.Answers.TryGetValue("MANEUVER_QUESTION", out var maneuver
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(maneuverChoice.Probabilities, options)}");
 }
 
-if (dinoResponseChoice.Answers.TryGetValue("JUMP_PROFILE_QUESTION", out var jumpProfileChoice))
+if (dinoResponseChoice.Answers.TryGetValue("jump_profile", out var jumpProfileChoice))
 {
     Console.WriteLine($"Type:          {jumpProfileChoice.Type}");
     Console.WriteLine($"Choice:        {jumpProfileChoice.Choice}");
