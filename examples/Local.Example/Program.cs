@@ -6,10 +6,16 @@ using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
 
 var apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY") ?? string.Empty;
-
 if (string.IsNullOrWhiteSpace(apiKey))
 {
     Console.WriteLine("Please set UNSLOTH_API_KEY before running the example.");
+    return;
+}
+
+var url = Environment.GetEnvironmentVariable("UNSLOTH_URL") ?? string.Empty;
+if (string.IsNullOrWhiteSpace(url))
+{
+    Console.WriteLine("Please set UNSLOTH_URL before running the example.");
     return;
 }
 
@@ -18,7 +24,7 @@ var options = new JsonSerializerOptions { WriteIndented = true };
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddTypeSafeSdk(options =>
 {
-    options.BaseAddress = new Uri("http://localhost:8888");
+    options.BaseAddress = new Uri(url);
     options.ApiKey = apiKey;
 });
 
