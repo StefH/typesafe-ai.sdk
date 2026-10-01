@@ -7,6 +7,12 @@ namespace TypeSafeAI.Sdk.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the TypeSafe SDK to the service collection with the specified configuration.
+    /// </summary>
+    /// <param name="services">The service collection to add the SDK to.</param>
+    /// <param name="configure">An action to configure the TypeSafeOptions.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddTypeSafeSdk(this IServiceCollection services, Action<TypeSafeOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -16,15 +22,16 @@ public static class ServiceCollectionExtensions
             .Configure(configure)
             .ValidateDataAnnotations();
 
+        var sdkOptions = services.BuildServiceProvider().GetRequiredService<IOptions<TypeSafeOptions>>().Value;
+
         services
             .AddITypeSafeClient(options =>
             {
-                options.BaseAddress = new Uri("https://api.typesafe.ai");
+                options.BaseAddress = sdkOptions.BaseAddress;
                 options.UseSerializer<SystemTextJsonSerializer>();
             })
-            .ConfigureHttpClient((serviceProvider, client) =>
+            .ConfigureHttpClient(client =>
             {
-                var sdkOptions = serviceProvider.GetRequiredService<IOptions<TypeSafeOptions>>().Value;
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
             });
 

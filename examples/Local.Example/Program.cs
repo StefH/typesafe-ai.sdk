@@ -4,13 +4,18 @@ using Microsoft.Extensions.Hosting;
 using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
-using TypeSafeAI.Sdk.Example;
 
-var apiKey = Environment.GetEnvironmentVariable("TYPESAFE_API_KEY") ?? string.Empty;
-
+var apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY") ?? string.Empty;
 if (string.IsNullOrWhiteSpace(apiKey))
 {
-    Console.WriteLine("Please set TYPESAFE_API_KEY before running the example.");
+    Console.WriteLine("Please set UNSLOTH_API_KEY before running the example.");
+    return;
+}
+
+var url = Environment.GetEnvironmentVariable("UNSLOTH_URL") ?? string.Empty;
+if (string.IsNullOrWhiteSpace(url))
+{
+    Console.WriteLine("Please set UNSLOTH_URL before running the example.");
     return;
 }
 
@@ -19,6 +24,7 @@ var options = new JsonSerializerOptions { WriteIndented = true };
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddTypeSafeSdk(options =>
 {
+    options.BaseAddress = new Uri(url);
     options.ApiKey = apiKey;
 });
 
@@ -48,8 +54,7 @@ if (responseNoul.Answers.TryGetValue("is_urgent", out var answerNoul))
     Console.WriteLine($"Noul:  {answerNoul.Noul:0.###}");
 }
 
-Console.WriteLine($"Model: {responseNoul.Model}");
-Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}, OutputTokens={responseNoul.Usage.OutputTokens}");
+Console.WriteLine($"Usage: InputTokens={responseNoul.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -81,8 +86,7 @@ if (responseChoice.Answers.TryGetValue("instructions", out var answerChoice))
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerChoice.Probabilities, options)}");
 }
 
-Console.WriteLine($"Model:          {responseChoice.Model}");
-Console.WriteLine($"Usage:          InputTokens={responseChoice.Usage.InputTokens}, OutputTokens={responseChoice.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={responseChoice.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -115,8 +119,7 @@ if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(answerScore.Probabilities, options)}");
 }
 
-Console.WriteLine($"Model:          {responseScore.Model}");
-Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={responseScore.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
 
@@ -124,7 +127,7 @@ var dinoChoice = new EvaluateRequest
 {
     State = new
     {
-        speed = 4.42f,
+        speed = 4.42,
         speedMode = "slow",
         dinosaurMotion = "running",
         obstacle = new
@@ -138,11 +141,9 @@ var dinoChoice = new EvaluateRequest
     {
         ["maneuver"] = Question.Choice(
             """
-            Choose the single safest maneuver for the dinosaur to avoid,
-            the target obstacle and continue running.
-            The dinosaur motion in the state is only what it was doing when the
-            distant obstacle was first observed; do not assume that motion will
-            still be active when the obstacle arrives.
+            Choose the single safest maneuver for the dinosaur to avoid, the target obstacle and continue running.
+            The dinosaur motion in the state is only what it was doing when the distant obstacle was first observed;
+            do not assume that motion will still be active when the obstacle arrives.
             Choose only the maneuver type. Browser code will handle the exact timing.
             """,
             criteria: new Dictionary<string, object?>
@@ -188,9 +189,6 @@ if (dinoResponseChoice.Answers.TryGetValue("jump_profile", out var jumpProfileCh
     Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(jumpProfileChoice.Probabilities, options)}");
 }
 
-Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}, OutputTokens={dinoResponseChoice.Usage.OutputTokens}");
+Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}");
 
 Console.WriteLine(new string('-', 80));
-
-var tester = new PromptInjectionTester(client);
-await tester.RunsTestsAsync();

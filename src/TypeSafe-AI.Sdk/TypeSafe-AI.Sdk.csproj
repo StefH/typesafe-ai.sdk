@@ -16,11 +16,14 @@
     <Description>TypeSafe-AI .NET SDK</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo.png</PackageIcon>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../PackageReleaseNotes.txt"))</PackageReleaseNotes>
+    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsPackable)' != 'false'">
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="..\..\resources\logo.png" Pack="true" PackagePath="/" Link="logo.png" />
+    <None Include="../../PackageReadme.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <PropertyGroup>

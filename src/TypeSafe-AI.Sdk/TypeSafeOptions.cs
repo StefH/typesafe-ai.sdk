@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TypeSafeAI.Sdk;
 
-public sealed class TypeSafeOptions
+public class TypeSafeOptions
 {
     [Url]
     public required Uri BaseAddress { get; set; } = new("https://api.typesafe.ai");
