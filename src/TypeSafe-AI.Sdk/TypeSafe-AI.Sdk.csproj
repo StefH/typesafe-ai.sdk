@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix>preview-05</VersionSuffix>
+    <VersionSuffix>preview-06</VersionSuffix>
     <RootNamespace>TypeSafeAI.Sdk</RootNamespace>
     <Authors>Stef Heyenrath</Authors>
     <Company>TypeSafe-AI.Sdk</Company>
@@ -21,9 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsPackable)' != 'false'">
-    <None Include="README.md" Pack="true" PackagePath="/" />
-    <None Include="..\..\resources\logo.png" Pack="true" PackagePath="/" Link="logo.png" />
-    <None Include="../../PackageReadme.md" Pack="true" PackagePath="" />
+    <None Include="../../resources/logo.png" Pack="true" PackagePath="/" Link="logo.png" />
+    <None Include="./PackageReadme.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <PropertyGroup>

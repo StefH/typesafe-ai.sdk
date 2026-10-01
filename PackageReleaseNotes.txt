@@ -1,1 +1,5 @@
-...
+# 0.0.1 (01 October 2026)
+- #1 Add initial code [enhancement]
+- #2 Small updates + add examples [enhancement]
+
+The full release notes can be found here: https://github.com/StefH/typesafe-ai.sdk/blob/main/ReleaseNotes.md
