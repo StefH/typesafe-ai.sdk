@@ -35,6 +35,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
     <PackageReference Include="ZeroAlloc.Rest" />
+    <PackageReference Include="ZeroAlloc.Rest.DependencyInjection" />
     <PackageReference Include="ZeroAlloc.Rest.SystemTextJson" />
   </ItemGroup>
 

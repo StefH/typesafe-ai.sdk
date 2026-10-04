@@ -1,23 +1,127 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
 
-var apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY") ?? string.Empty;
-if (string.IsNullOrWhiteSpace(apiKey))
+string apiKey = string.Empty;
+string url;
+string? model;
+
+Console.WriteLine("Choose Runner / AI Model");
+Console.WriteLine("1. Unsloth");
+Console.WriteLine("2. Ollama : nimble");
+Console.WriteLine("3. Llama : lev");
+Console.WriteLine("0. Quit");
+
+var option = Console.Read();
+if (option == '0')
 {
-    Console.WriteLine("Please set UNSLOTH_API_KEY before running the example.");
+    Environment.Exit(0);
     return;
 }
 
-var url = Environment.GetEnvironmentVariable("UNSLOTH_URL") ?? string.Empty;
-if (string.IsNullOrWhiteSpace(url))
+if (option == '1')
 {
-    Console.WriteLine("Please set UNSLOTH_URL before running the example.");
+    url = Environment.GetEnvironmentVariable("UNSLOTH_URL")!;
+    apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY")!;
+    model = "jev-latest";
+}
+else if (option == '2')
+{
+    url = "http://localhost:11434";
+    model = "nimble";
+}
+else if (option == '3')
+{
+    url = "http://localhost:8080";
+    model = "ggml-org/lev-GGUF";
+}
+else
+{
+    Console.WriteLine("Invalid option.");
     return;
 }
+
+
+var b =
+    """
+        {
+      "state": {
+        "message": "Hi, I was charged twice for my order #4471 and I want a refund.",
+        "plan": "pro",
+        "order": {
+          "id": 4471,
+          "items": ["phone case", "charger"]
+        }
+      },
+      "questions": {
+        "intent": {
+          "type": "choice",
+          "instructions": "What does the customer want?",
+          "criteria": {
+            "refund": "wants money back",
+            "cancel": "wants to cancel an order",
+            "track": "wants to know where an order is",
+            "other": "anything else"
+          }
+        },
+        "urgent": {
+          "type": "noul",
+          "instructions": "Does this need a human within the hour?"
+        },
+        "frustration": {
+          "type": "score",
+          "instructions": "How frustrated is the customer?",
+          "criteria": ["calm", "mildly annoyed", "annoyed", "angry"]
+        },
+        "refund": {
+          "type": "noul",
+          "instructions": "Is a refund requested?",
+          "criteria": {
+            "true": "money back is asked",
+            "false": "no money back is asked"
+          }
+        },
+        "team": {
+          "type": "choice",
+          "instructions": "Which team?",
+          "criteria": {
+            "billing": null,
+            "shipping": null,
+            "technical": null,
+            "sales": null,
+            "legal": null,
+            "returns": null,
+            "fraud": null,
+            "accounts": null,
+            "retention": null,
+            "other": null
+          }
+        }
+      }
+    }
+    """;
+
+
+
+var h = new HttpClient();
+h.BaseAddress = new Uri(url);
+
+var x = await h.PostAsync("v1/systemone", new StringContent(b, System.Text.Encoding.UTF8, "application/json"), new CancellationToken());
+
+Console.WriteLine($"Response: {await x.Content.ReadAsStringAsync()}");
+
+
+
+
+
+
+
+
+
 
 var options = new JsonSerializerOptions { WriteIndented = true };
 
@@ -34,6 +138,7 @@ var client = host.Services.GetRequiredService<ITypeSafeClient>();
 
 var requestNoul = new EvaluateRequest
 {
+    Model = model,
     State = "Help! My payouts have been failing for 3 days.",
     Questions = new Dictionary<string, Question>
     {
@@ -60,6 +165,7 @@ Console.WriteLine(new string('-', 80));
 
 var requestChoice = new EvaluateRequest
 {
+    Model = model,
     State = "My running shoes arrived in the wrong size. Can I swap them for a size 10?",
     Questions = new Dictionary<string, Question>
     {
@@ -92,6 +198,7 @@ Console.WriteLine(new string('-', 80));
 
 var requestScore = new EvaluateRequest
 {
+    Model = model,
     State = "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari.",
     Questions = new Dictionary<string, Question>
     {
@@ -125,6 +232,7 @@ Console.WriteLine(new string('-', 80));
 
 var dinoChoice = new EvaluateRequest
 {
+    Model = model,
     State = new
     {
         speed = 4.42,

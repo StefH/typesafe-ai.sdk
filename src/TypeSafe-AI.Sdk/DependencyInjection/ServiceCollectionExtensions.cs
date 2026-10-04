@@ -32,7 +32,10 @@ public static class ServiceCollectionExtensions
             })
             .ConfigureHttpClient(client =>
             {
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
+                if (!string.IsNullOrEmpty(sdkOptions.ApiKey))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
+                }
             });
 
         return services;
