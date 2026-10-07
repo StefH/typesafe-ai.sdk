@@ -11,7 +11,7 @@ string? model;
 
 Console.WriteLine("Choose Runner / AI Model");
 Console.WriteLine("1. Unsloth");
-Console.WriteLine("2. Ollama : nimble");
+Console.WriteLine("2. Ollama : Nimble");
 Console.WriteLine("3. Llama : Lev");
 Console.WriteLine("4. Llama : OpenJev");
 Console.WriteLine("0. Quit");
