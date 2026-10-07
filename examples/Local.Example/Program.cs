@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TypeSafeAI.Sdk.Api;
@@ -13,7 +12,8 @@ string? model;
 Console.WriteLine("Choose Runner / AI Model");
 Console.WriteLine("1. Unsloth");
 Console.WriteLine("2. Ollama : nimble");
-Console.WriteLine("3. Llama : lev");
+Console.WriteLine("3. Llama : Lev");
+Console.WriteLine("4. Llama : OpenJev");
 Console.WriteLine("0. Quit");
 
 var option = Console.Read();
@@ -39,89 +39,16 @@ else if (option == '3')
     url = "http://localhost:8080";
     model = "ggml-org/lev-GGUF";
 }
+else if (option == '4')
+{
+    url = "http://localhost:8080";
+    model = "ggml-org/openjev-GGUF";
+}
 else
 {
     Console.WriteLine("Invalid option.");
     return;
 }
-
-
-var b =
-    """
-        {
-      "state": {
-        "message": "Hi, I was charged twice for my order #4471 and I want a refund.",
-        "plan": "pro",
-        "order": {
-          "id": 4471,
-          "items": ["phone case", "charger"]
-        }
-      },
-      "questions": {
-        "intent": {
-          "type": "choice",
-          "instructions": "What does the customer want?",
-          "criteria": {
-            "refund": "wants money back",
-            "cancel": "wants to cancel an order",
-            "track": "wants to know where an order is",
-            "other": "anything else"
-          }
-        },
-        "urgent": {
-          "type": "noul",
-          "instructions": "Does this need a human within the hour?"
-        },
-        "frustration": {
-          "type": "score",
-          "instructions": "How frustrated is the customer?",
-          "criteria": ["calm", "mildly annoyed", "annoyed", "angry"]
-        },
-        "refund": {
-          "type": "noul",
-          "instructions": "Is a refund requested?",
-          "criteria": {
-            "true": "money back is asked",
-            "false": "no money back is asked"
-          }
-        },
-        "team": {
-          "type": "choice",
-          "instructions": "Which team?",
-          "criteria": {
-            "billing": null,
-            "shipping": null,
-            "technical": null,
-            "sales": null,
-            "legal": null,
-            "returns": null,
-            "fraud": null,
-            "accounts": null,
-            "retention": null,
-            "other": null
-          }
-        }
-      }
-    }
-    """;
-
-
-
-var h = new HttpClient();
-h.BaseAddress = new Uri(url);
-
-var x = await h.PostAsync("v1/systemone", new StringContent(b, System.Text.Encoding.UTF8, "application/json"), new CancellationToken());
-
-Console.WriteLine($"Response: {await x.Content.ReadAsStringAsync()}");
-
-
-
-
-
-
-
-
-
 
 var options = new JsonSerializerOptions { WriteIndented = true };
 
