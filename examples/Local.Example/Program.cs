@@ -7,13 +7,12 @@ using TypeSafeAI.Sdk.DependencyInjection;
 
 string apiKey = string.Empty;
 string url;
-string? model;
+string? model = null;
 
 Console.WriteLine("Choose Runner / AI Model");
 Console.WriteLine("1. Unsloth");
 Console.WriteLine("2. Ollama : Nimble");
 Console.WriteLine("3. Llama : Lev");
-Console.WriteLine("4. Llama : OpenJev");
 Console.WriteLine("0. Quit");
 
 var option = Console.Read();
@@ -34,15 +33,9 @@ else if (option == '2')
     url = "http://localhost:11434";
     model = "nimble";
 }
-else if (option == '3')
+else if (option >= '3')
 {
     url = "http://localhost:8080";
-    model = "ggml-org/lev-GGUF";
-}
-else if (option == '4')
-{
-    url = "http://localhost:8080";
-    model = "ggml-org/openjev-GGUF";
 }
 else
 {

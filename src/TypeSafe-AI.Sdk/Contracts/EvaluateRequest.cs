@@ -14,10 +14,10 @@ public sealed class EvaluateRequest
     public required object State { get; init; }
 
     /// <summary>
-    /// The model that handles the request. Use <c>"jev-latest"</c>, TypeSafe’s flagship model.
+    /// The model that handles the request. Defaults to <c>"jev-latest"</c>, TypeSafe’s flagship model.
     /// </summary>
     [JsonPropertyName("model")]
-    public string Model { get; init; } = "jev-latest";
+    public string? Model { get; init; } = "jev-latest";
 
     /// <summary>
     /// A map of typed Question objects. You choose each key; answers come back under the same keys.
