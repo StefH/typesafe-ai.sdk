@@ -13,6 +13,7 @@ Console.WriteLine("Choose Runner / AI Model");
 Console.WriteLine("1. Unsloth");
 Console.WriteLine("2. Ollama : Nimble");
 Console.WriteLine("3. Llama : Lev");
+Console.WriteLine("9. HAL-X THX-01");
 Console.WriteLine("0. Quit");
 
 var option = Console.Read();
@@ -36,6 +37,12 @@ else if (option == '2')
 else if (option >= '3')
 {
     url = "http://localhost:8080";
+}
+else if (option == '9')
+{
+    url = "https://api.hal-x.ai/";
+    model = "thx-01";
+    apiKey = Environment.GetEnvironmentVariable("HALX_API_KEY")!;
 }
 else
 {
