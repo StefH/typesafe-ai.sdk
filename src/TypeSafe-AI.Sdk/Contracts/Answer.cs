@@ -35,6 +35,13 @@ public sealed class Answer
     public float? Score { get; init; }
 
     /// <summary>
+    /// The four edges, <c>top</c>, <c>bottom</c>, <c>left</c>, and <c>right</c>, each from 0 to 1.
+    /// </summary>
+    [JsonPropertyName("box")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public BoxEdges? Box { get; init; }
+
+    /// <summary>
     /// How certain the model is, derived from probabilities.
     /// </summary>
     [JsonPropertyName("confidence")]

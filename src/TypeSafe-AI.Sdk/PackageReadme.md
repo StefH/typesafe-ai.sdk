@@ -125,6 +125,48 @@ Console.WriteLine($"Model:         {responseScore.Model}");
 Console.WriteLine($"Usage:         InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
 ```
 
+### Create a Box request
+``` csharp
+builder.Services.AddTypeSafeSdk(options =>
+{
+    options.ApiKey = apiKey;
+    options.EnableImagesDangerZone = true;
+});
+
+var imageBytes = await File.ReadAllBytesAsync("mug.jpg");
+var imageBase64 = Convert.ToBase64String(imageBytes);
+
+var requestBox = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "mug-photo"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["mug-photo"] = new Asset
+        {
+            Type = "image",
+            MimeType = "image/jpeg",
+            Base64 = imageBase64
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["mug"] = Question.Box("the blue espresso mug in `photo`")
+    }
+};
+
+var responseBox = await client.EvaluateAsync(requestBox);
+
+if (responseBox.Answers.TryGetValue("mug", out var answerBox) && answerBox.Box is not null)
+{
+    Console.WriteLine($"Top: {answerBox.Box.Top:0.###}, Bottom: {answerBox.Box.Bottom:0.###}, Left: {answerBox.Box.Left:0.###}, Right: {answerBox.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {answerBox.Confidence:0.###}");
+}
+```
+
 ---
 
 ### Sponsors

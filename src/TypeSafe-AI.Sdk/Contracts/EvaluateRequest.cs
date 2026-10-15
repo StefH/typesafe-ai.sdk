@@ -24,4 +24,11 @@ public sealed class EvaluateRequest
     /// </summary>
     [JsonPropertyName("questions")]
     public required Dictionary<string, Question> Questions { get; init; }
+
+    /// <summary>
+    /// A Box question needs an image in the request.
+    /// </summary>
+    [JsonPropertyName("assets")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, Asset>? Assets { get; init; }
 }

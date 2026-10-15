@@ -3,12 +3,12 @@ using System.Text.Json.Serialization;
 namespace TypeSafeAI.Sdk.Contracts;
 
 /// <summary>
-/// A <c>Question</c> is one of three types, set by its <c>type</c> field. All three share <c>type</c> and <c>instructions</c>; each adds its own <c>criteria</c>.
+/// A <c>Question</c> is one of four types, set by its <c>type</c> field.
 /// </summary>
 public sealed class Question
 {
     /// <summary>
-    /// A <c>Question</c> is one of three types, set by its <c>type</c> field.
+    /// A <c>Question</c> is one of four types, set by its <c>type</c> field.
     /// </summary>
     [JsonPropertyName("type")]
     public required string Type { get; init; }
@@ -77,5 +77,17 @@ public sealed class Question
         Type = "score",
         Instructions = instructions,
         Criteria = criteria
+    };
+
+    /// <summary>
+    /// Creates a new <c>Question</c> of type "box" for finding where something is in an image.
+    /// </summary>
+    /// <param name="instructions">What to find, and in which image.</param>
+    /// <returns>A new <c>Question</c> of type "box".</returns>
+    public static Question Box(object instructions) => new()
+    {
+        Type = "box",
+        Instructions = instructions,
+        Criteria = null
     };
 }

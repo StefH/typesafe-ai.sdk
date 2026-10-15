@@ -20,6 +20,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddTypeSafeSdk(options =>
 {
     options.ApiKey = apiKey;
+    options.EnableImagesDangerZone = true;
 });
 
 using var host = builder.Build();
@@ -189,6 +190,55 @@ if (dinoResponseChoice.Answers.TryGetValue("jump_profile", out var jumpProfileCh
 }
 
 Console.WriteLine($"Usage:          InputTokens={dinoResponseChoice.Usage.InputTokens}, OutputTokens={dinoResponseChoice.Usage.OutputTokens}");
+
+Console.WriteLine(new string('-', 80));
+
+var imagePath = Path.Combine(AppContext.BaseDirectory, "mug.jpg");
+var imageBytes = await File.ReadAllBytesAsync(imagePath);
+var imageBase64 = Convert.ToBase64String(imageBytes);
+
+var requestBox = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "mug-photo"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["mug-photo"] = new Asset
+        {
+            Type = "image",
+            Format = "jpg",
+            Base64 = imageBase64
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["mug"] = Question.Box("the mug in `photo`")
+    }
+};
+
+var responseBox = await client.EvaluateAsync(requestBox);
+
+Console.WriteLine($"State:         {JsonSerializer.Serialize(requestBox.State, options)}");
+
+if (responseBox.Answers.TryGetValue("mug", out var answerBox))
+{
+    Console.WriteLine($"Type:          {answerBox.Type}");
+    Console.WriteLine($"Confidence:    {answerBox.Confidence:0.###}");
+
+    if (answerBox.Box is not null)
+    {
+        Console.WriteLine($"Box.Top:       {answerBox.Box.Top:0.###}");
+        Console.WriteLine($"Box.Bottom:    {answerBox.Box.Bottom:0.###}");
+        Console.WriteLine($"Box.Left:      {answerBox.Box.Left:0.###}");
+        Console.WriteLine($"Box.Right:     {answerBox.Box.Right:0.###}");
+    }
+}
+
+Console.WriteLine($"Model:         {responseBox.Model}");
+Console.WriteLine($"Usage:         InputTokens={responseBox.Usage.InputTokens}, OutputTokens={responseBox.Usage.OutputTokens}");
 
 Console.WriteLine(new string('-', 80));
 

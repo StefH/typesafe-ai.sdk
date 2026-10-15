@@ -14,4 +14,9 @@ public class TypeSafeOptions
     /// The optional API key to use for authentication. If not provided, the client does not use any authentication.
     /// </summary>
     public string? ApiKey { get; set; }
+
+    /// <summary>
+    /// To use images or Box questions, send the <c>TypeSafe-Danger-Zone-Images: true</c> header with each request that contains an image or a Box question.
+    /// </summary>
+    public bool EnableImagesDangerZone { get; set; }
 }
