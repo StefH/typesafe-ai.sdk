@@ -34,7 +34,7 @@ else if (option == '2')
     url = "http://localhost:11434";
     model = "nimble";
 }
-else if (option >= '3')
+else if (option == '3')
 {
     url = "http://localhost:8080";
 }

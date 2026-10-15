@@ -152,7 +152,7 @@ var requestBox = new EvaluateRequest
         ["mug-photo"] = new Asset
         {
             Type = "image",
-            MimeType = "image/jpeg",
+            Format = "jpg",
             Base64 = imageBase64
         }
     },
