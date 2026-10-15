@@ -296,7 +296,7 @@ await using var dogPosterImageStream = File.OpenRead(dogPosterImagePath);
 
 var requestImagesMultipart = new EvaluateRequest
 {
-    Model = "jev-preview",
+    Model = "jev-latest",
     State = new
     {
         photo = "a3f1c2e8-found"
@@ -352,20 +352,25 @@ Console.WriteLine($"State:         {JsonSerializer.Serialize(requestImagesMultip
 
 if (responseImagesMultipart.Answers.TryGetValue("same_dog", out var sameDogAnswer))
 {
+    Console.WriteLine($"Key:           same_dog");
     Console.WriteLine($"Type:          {sameDogAnswer.Type}");
     Console.WriteLine($"Noul:          {sameDogAnswer.Noul:0.###}");
-    Console.WriteLine($"Confidence:    {sameDogAnswer.Confidence:0.###}");
 }
+
+Console.WriteLine();
 
 if (responseImagesMultipart.Answers.TryGetValue("has_collar", out var hasCollarAnswer))
 {
+    Console.WriteLine($"Key:           has_collar");
     Console.WriteLine($"Type:          {hasCollarAnswer.Type}");
     Console.WriteLine($"Noul:          {hasCollarAnswer.Noul:0.###}");
-    Console.WriteLine($"Confidence:    {hasCollarAnswer.Confidence:0.###}");
 }
+
+Console.WriteLine();
 
 if (responseImagesMultipart.Answers.TryGetValue("coat", out var coatAnswer))
 {
+    Console.WriteLine($"Key:           coat");
     Console.WriteLine($"Type:          {coatAnswer.Type}");
     Console.WriteLine($"Choice:        {coatAnswer.Choice}");
     Console.WriteLine($"Confidence:    {coatAnswer.Confidence:0.###}");
