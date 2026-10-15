@@ -13,4 +13,10 @@
     <RootNamespace>TypeSafeAI.Sdk.Example</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="mug.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

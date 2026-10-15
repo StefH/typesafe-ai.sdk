@@ -5,17 +5,48 @@ using TypeSafeAI.Sdk.Api;
 using TypeSafeAI.Sdk.Contracts;
 using TypeSafeAI.Sdk.DependencyInjection;
 
-var apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY") ?? string.Empty;
-if (string.IsNullOrWhiteSpace(apiKey))
+string apiKey = string.Empty;
+string url;
+string? model = null;
+
+Console.WriteLine("Choose Runner / AI Model");
+Console.WriteLine("1. Unsloth");
+Console.WriteLine("2. Ollama : Nimble");
+Console.WriteLine("3. Llama : Lev");
+Console.WriteLine("9. HAL-X THX-01");
+Console.WriteLine("0. Quit");
+
+var option = Console.Read();
+if (option == '0')
 {
-    Console.WriteLine("Please set UNSLOTH_API_KEY before running the example.");
+    Environment.Exit(0);
     return;
 }
 
-var url = Environment.GetEnvironmentVariable("UNSLOTH_URL") ?? string.Empty;
-if (string.IsNullOrWhiteSpace(url))
+if (option == '1')
 {
-    Console.WriteLine("Please set UNSLOTH_URL before running the example.");
+    url = Environment.GetEnvironmentVariable("UNSLOTH_URL")!;
+    apiKey = Environment.GetEnvironmentVariable("UNSLOTH_API_KEY")!;
+    model = "jev-latest";
+}
+else if (option == '2')
+{
+    url = "http://localhost:11434";
+    model = "nimble";
+}
+else if (option == '3')
+{
+    url = "http://localhost:8080";
+}
+else if (option == '9')
+{
+    url = "https://api.hal-x.ai/";
+    model = "thx-01";
+    apiKey = Environment.GetEnvironmentVariable("HALX_API_KEY")!;
+}
+else
+{
+    Console.WriteLine("Invalid option.");
     return;
 }
 
@@ -34,6 +65,7 @@ var client = host.Services.GetRequiredService<ITypeSafeClient>();
 
 var requestNoul = new EvaluateRequest
 {
+    Model = model,
     State = "Help! My payouts have been failing for 3 days.",
     Questions = new Dictionary<string, Question>
     {
@@ -60,6 +92,7 @@ Console.WriteLine(new string('-', 80));
 
 var requestChoice = new EvaluateRequest
 {
+    Model = model,
     State = "My running shoes arrived in the wrong size. Can I swap them for a size 10?",
     Questions = new Dictionary<string, Question>
     {
@@ -92,6 +125,7 @@ Console.WriteLine(new string('-', 80));
 
 var requestScore = new EvaluateRequest
 {
+    Model = model,
     State = "The export button crashes the settings page in Safari. It works in Chrome, but a few of our customers only use Safari.",
     Questions = new Dictionary<string, Question>
     {
@@ -125,6 +159,7 @@ Console.WriteLine(new string('-', 80));
 
 var dinoChoice = new EvaluateRequest
 {
+    Model = model,
     State = new
     {
         speed = 4.42,

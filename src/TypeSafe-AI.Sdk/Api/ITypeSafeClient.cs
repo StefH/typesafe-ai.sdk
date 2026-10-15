@@ -17,4 +17,17 @@ public interface ITypeSafeClient
     /// <returns>One answer per question.</returns>
     [Post("/v1/systemone")]
     Task<EvaluateResponse> EvaluateAsync([Body] EvaluateRequest body, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a multipart/form-data request body for image/box evaluation.
+    /// </summary>
+    /// <param name="multipartBody">Multipart payload stream containing the <c>request</c> part and image file part(s).</param>
+    /// <param name="typeSafeDangerZoneImages">Set to <c>true</c> to enable image and box handling.</param>
+    /// <param name="cancellationToken">The optional cancellation token.</param>
+    /// <returns>One answer per question.</returns>
+    [Post("/v1/systemone")]
+    Task<EvaluateResponse> EvaluateBoxAsync(
+        [Body(ContentType = "multipart/form-data; boundary=----TypeSafeAIBoundary")] Stream multipartBody,
+        [Header("TypeSafe-Danger-Zone-Images")] string typeSafeDangerZoneImages = "true",
+        CancellationToken cancellationToken = default);
 }

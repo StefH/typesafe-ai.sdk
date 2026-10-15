@@ -1,5 +1,5 @@
 # typesafe-ai.sdk
-**.NET** SDK for TypeSafe AI
+**.NET** SDK for [TypeSafe AI](https://docs.typesafe.ai)
 
 ## Package
 [![TypeSafeAI.Sdk](https://img.shields.io/nuget/v/TypeSafe-AI.Sdk)](https://www.nuget.org/packages/TypeSafe-AI.Sdk)
@@ -127,6 +127,88 @@ if (responseScore.Answers.TryGetValue("bug_severity", out var answerScore))
 
 Console.WriteLine($"Model:         {responseScore.Model}");
 Console.WriteLine($"Usage:         InputTokens={responseScore.Usage.InputTokens}, OutputTokens={responseScore.Usage.OutputTokens}");
+```
+
+### Create a Box request
+``` csharp
+builder.Services.AddTypeSafeSdk(options =>
+{
+    options.ApiKey = apiKey;
+    options.EnableImagesDangerZone = true;
+});
+
+var imageBytes = await File.ReadAllBytesAsync("mug.jpg");
+var imageBase64 = Convert.ToBase64String(imageBytes);
+
+var requestBox = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "mug-photo"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["mug-photo"] = new Asset
+        {
+            Type = "image",
+            Format = "jpg",
+            Base64 = imageBase64
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["mug"] = Question.Box("the blue espresso mug in `photo`")
+    }
+};
+
+var responseBox = await client.EvaluateAsync(requestBox);
+
+if (responseBox.Answers.TryGetValue("mug", out var answerBox) && answerBox.Box is not null)
+{
+    Console.WriteLine($"Top: {answerBox.Box.Top:0.###}, Bottom: {answerBox.Box.Bottom:0.###}, Left: {answerBox.Box.Left:0.###}, Right: {answerBox.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {answerBox.Confidence:0.###}");
+}
+```
+
+### Create a Box request with multipart upload
+``` csharp
+builder.Services.AddTypeSafeSdk(options =>
+{
+    options.ApiKey = apiKey;
+    options.EnableImagesDangerZone = true;
+});
+
+await using var imageStream = File.OpenRead("mug.jpg");
+
+var requestBoxMultipart = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "mug-photo"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["mug-photo"] = new Asset
+        {
+            Type = "image",
+            Part = "mug-photo-part"
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["mug"] = Question.Box("the blue espresso mug in `photo`")
+    }
+};
+
+var responseBoxMultipart = await client.EvaluateBoxAsync(requestBoxMultipart, "mug-photo-part", imageStream, "mug.jpg", "image/jpeg");
+
+if (responseBoxMultipart.Answers.TryGetValue("mug", out var answerBoxMultipart) && answerBoxMultipart.Box is not null)
+{
+    Console.WriteLine($"Top: {answerBoxMultipart.Box.Top:0.###}, Bottom: {answerBoxMultipart.Box.Bottom:0.###}, Left: {answerBoxMultipart.Box.Left:0.###}, Right: {answerBoxMultipart.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {answerBoxMultipart.Confidence:0.###}");
+}
 ```
 
 ---

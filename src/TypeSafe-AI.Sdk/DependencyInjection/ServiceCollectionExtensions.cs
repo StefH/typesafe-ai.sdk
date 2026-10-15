@@ -32,7 +32,15 @@ public static class ServiceCollectionExtensions
             })
             .ConfigureHttpClient(client =>
             {
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
+                if (!string.IsNullOrEmpty(sdkOptions.ApiKey))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sdkOptions.ApiKey}");
+                }
+
+                if (sdkOptions.EnableImagesDangerZone)
+                {
+                    client.DefaultRequestHeaders.Add("TypeSafe-Danger-Zone-Images", "true");
+                }
             });
 
         return services;
