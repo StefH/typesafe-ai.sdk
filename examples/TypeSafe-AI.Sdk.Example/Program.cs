@@ -280,6 +280,11 @@ if (responseBox.Answers.TryGetValue("mug", out answerBox))
         Console.WriteLine($"Box.Bottom:    {answerBox.Box.Bottom:0.###}");
         Console.WriteLine($"Box.Left:      {answerBox.Box.Left:0.###}");
         Console.WriteLine($"Box.Right:     {answerBox.Box.Right:0.###}");
+
+        var boxedMugImagePath = Path.Combine(AppContext.BaseDirectory, "mug-box.jpg");
+        await ImageUtils.DrawRedBoxAsync(imagePath, boxedMugImagePath, answerBox.Box);
+
+        Console.WriteLine($"Saved image:   {boxedMugImagePath}");
     }
 }
 
@@ -388,6 +393,11 @@ if (responseImagesMultipart.Answers.TryGetValue("collar_box", out var collarBoxA
     Console.WriteLine($"Left:       {collarBoxAnswer.Box.Left:0.###}");
     Console.WriteLine($"Right:      {collarBoxAnswer.Box.Right:0.###}");
     Console.WriteLine($"Confidence: {collarBoxAnswer.Confidence:0.###}");
+
+    var boxedCollarImagePath = Path.Combine(AppContext.BaseDirectory, "dog-found-collar-box.jpg");
+    await ImageUtils.DrawRedBoxAsync(foundDogImagePath, boxedCollarImagePath, collarBoxAnswer.Box);
+
+    Console.WriteLine($"Saved image: {boxedCollarImagePath}");
 }
 
 Console.WriteLine($"Model:         {responseImagesMultipart.Model}");
