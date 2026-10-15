@@ -167,6 +167,46 @@ if (responseBox.Answers.TryGetValue("mug", out var answerBox) && answerBox.Box i
 }
 ```
 
+### Create a Box request with multipart upload
+``` csharp
+builder.Services.AddTypeSafeSdk(options =>
+{
+    options.ApiKey = apiKey;
+    options.EnableImagesDangerZone = true;
+});
+
+await using var imageStream = File.OpenRead("mug.jpg");
+
+var requestBoxMultipart = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "mug-photo"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["mug-photo"] = new Asset
+        {
+            Type = "image",
+            Part = "mug-photo-part"
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["mug"] = Question.Box("the blue espresso mug in `photo`")
+    }
+};
+
+var responseBoxMultipart = await client.EvaluateBoxAsync(requestBoxMultipart, "mug-photo-part", imageStream, "mug.jpg", "image/jpeg");
+
+if (responseBoxMultipart.Answers.TryGetValue("mug", out var answerBoxMultipart) && answerBoxMultipart.Box is not null)
+{
+    Console.WriteLine($"Top: {answerBoxMultipart.Box.Top:0.###}, Bottom: {answerBoxMultipart.Box.Bottom:0.###}, Left: {answerBoxMultipart.Box.Left:0.###}, Right: {answerBoxMultipart.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {answerBoxMultipart.Confidence:0.###}");
+}
+```
+
 ---
 
 ### Sponsors
