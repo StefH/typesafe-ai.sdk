@@ -247,7 +247,8 @@ var requestImagesMultipart = new EvaluateRequest
                 ["short"] = "Short and smooth.",
                 ["long"] = "Long or feathered.",
                 ["curly"] = "Curly or wiry."
-            })
+            }),
+        ["collar_box"] = Question.Box("the collar in `photo`")
     },
 };
 
@@ -280,6 +281,15 @@ if (responseImagesMultipart.Answers.TryGetValue("coat", out var coatAnswer))
 {
     Console.WriteLine($"Choice:     {coatAnswer.Choice}");
     Console.WriteLine($"Confidence: {coatAnswer.Confidence:0.###}");
+}
+
+if (responseImagesMultipart.Answers.TryGetValue("collar_box", out var collarBoxAnswer) && collarBoxAnswer.Box is not null)
+{
+    Console.WriteLine($"Top:        {collarBoxAnswer.Box.Top:0.###}");
+    Console.WriteLine($"Bottom:     {collarBoxAnswer.Box.Bottom:0.###}");
+    Console.WriteLine($"Left:       {collarBoxAnswer.Box.Left:0.###}");
+    Console.WriteLine($"Right:      {collarBoxAnswer.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {collarBoxAnswer.Confidence:0.###}");
 }
 ```
 
