@@ -331,7 +331,8 @@ var requestImagesMultipart = new EvaluateRequest
                 ["long"] = "Long or feathered.",
                 ["curly"] = "Curly or wiry."
             }),
-        ["collar_box"] = Question.Box("the collar in `photo`")
+        ["collar_box"] = Question.Box("the collar in `photo`"),
+        ["eyes_box"] = Question.Box("the dog's eyes in `photo`")
     }
 };
 
@@ -398,6 +399,23 @@ if (responseImagesMultipart.Answers.TryGetValue("collar_box", out var collarBoxA
     await ImageUtils.DrawRedBoxAsync(foundDogImagePath, boxedCollarImagePath, collarBoxAnswer.Box);
 
     Console.WriteLine($"Saved image: {boxedCollarImagePath}");
+}
+
+Console.WriteLine();
+
+if (responseImagesMultipart.Answers.TryGetValue("eyes_box", out var eyesBoxAnswer) && eyesBoxAnswer.Box is not null)
+{
+    Console.WriteLine($"Key:        eyes_box");
+    Console.WriteLine($"Top:        {eyesBoxAnswer.Box.Top:0.###}");
+    Console.WriteLine($"Bottom:     {eyesBoxAnswer.Box.Bottom:0.###}");
+    Console.WriteLine($"Left:       {eyesBoxAnswer.Box.Left:0.###}");
+    Console.WriteLine($"Right:      {eyesBoxAnswer.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {eyesBoxAnswer.Confidence:0.###}");
+
+    var boxedEyesImagePath = Path.Combine(AppContext.BaseDirectory, "dog-found-eyes-box.jpg");
+    await ImageUtils.DrawRedBoxAsync(foundDogImagePath, boxedEyesImagePath, eyesBoxAnswer.Box);
+
+    Console.WriteLine($"Saved image: {boxedEyesImagePath}");
 }
 
 Console.WriteLine($"Model:         {responseImagesMultipart.Model}");
