@@ -288,5 +288,94 @@ Console.WriteLine($"Usage:         InputTokens={responseBox.Usage.InputTokens}, 
 
 Console.WriteLine(new string('-', 80));
 
+var foundDogImagePath = Path.Combine(AppContext.BaseDirectory, "dog-found.jpg");
+var dogPosterImagePath = Path.Combine(AppContext.BaseDirectory, "dog-poster.png");
+
+await using var foundDogImageStream = File.OpenRead(foundDogImagePath);
+await using var dogPosterImageStream = File.OpenRead(dogPosterImagePath);
+
+var requestImagesMultipart = new EvaluateRequest
+{
+    Model = "jev-preview",
+    State = new
+    {
+        photo = "a3f1c2e8-found"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["a3f1c2e8-found"] = new Asset
+        {
+            Type = "image",
+            Part = "dog-found-photo"
+        },
+        ["77b0d4a1-poster"] = new Asset
+        {
+            Type = "image",
+            Part = "dog-poster-photo"
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["same_dog"] = Question.Noul("Is the dog in `photo` the same dog as in this picture: 77b0d4a1-poster?"),
+        ["has_collar"] = Question.Noul("Is the dog in `photo` wearing a collar?"),
+        ["coat"] = Question.Choice(
+            "What is the coat of the dog in `photo` like?",
+            criteria: new Dictionary<string, object?>
+            {
+                ["short"] = "Short and smooth.",
+                ["long"] = "Long or feathered.",
+                ["curly"] = "Curly or wiry."
+            })
+    }
+};
+
+var responseImagesMultipart = await client.EvaluateImagesAsync(
+    requestImagesMultipart,
+    [
+        new MultipartImagePart
+        {
+            PartName = "dog-found-photo",
+            ImageStream = foundDogImageStream,
+            FileName = "dog-found.jpg",
+            ContentType = "image/jpeg"
+        },
+        new MultipartImagePart
+        {
+            PartName = "dog-poster-photo",
+            ImageStream = dogPosterImageStream,
+            FileName = "dog-poster.png",
+            ContentType = "image/png"
+        }
+    ]);
+
+Console.WriteLine($"State:         {JsonSerializer.Serialize(requestImagesMultipart.State, options)}");
+
+if (responseImagesMultipart.Answers.TryGetValue("same_dog", out var sameDogAnswer))
+{
+    Console.WriteLine($"Type:          {sameDogAnswer.Type}");
+    Console.WriteLine($"Noul:          {sameDogAnswer.Noul:0.###}");
+    Console.WriteLine($"Confidence:    {sameDogAnswer.Confidence:0.###}");
+}
+
+if (responseImagesMultipart.Answers.TryGetValue("has_collar", out var hasCollarAnswer))
+{
+    Console.WriteLine($"Type:          {hasCollarAnswer.Type}");
+    Console.WriteLine($"Noul:          {hasCollarAnswer.Noul:0.###}");
+    Console.WriteLine($"Confidence:    {hasCollarAnswer.Confidence:0.###}");
+}
+
+if (responseImagesMultipart.Answers.TryGetValue("coat", out var coatAnswer))
+{
+    Console.WriteLine($"Type:          {coatAnswer.Type}");
+    Console.WriteLine($"Choice:        {coatAnswer.Choice}");
+    Console.WriteLine($"Confidence:    {coatAnswer.Confidence:0.###}");
+    Console.WriteLine($"Probabilities: {JsonSerializer.Serialize(coatAnswer.Probabilities, options)}");
+}
+
+Console.WriteLine($"Model:         {responseImagesMultipart.Model}");
+Console.WriteLine($"Usage:         InputTokens={responseImagesMultipart.Usage.InputTokens}, OutputTokens={responseImagesMultipart.Usage.OutputTokens}");
+
+Console.WriteLine(new string('-', 80));
+
 var tester = new PromptInjectionTester(client);
 await tester.RunsTestsAsync();

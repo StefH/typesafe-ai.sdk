@@ -14,7 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="mug.jpg">
+    <None Include="*.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
