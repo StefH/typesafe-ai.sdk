@@ -251,7 +251,7 @@ var requestImagesMultipart = new EvaluateRequest
     },
 };
 
-var responseImagesMultipart = await client.EvaluateWithImagesAsync(
+var responseImagesMultipart = await client.EvaluateImagesAsync(
     requestImagesMultipart,
     [
         new MultipartImagePart
