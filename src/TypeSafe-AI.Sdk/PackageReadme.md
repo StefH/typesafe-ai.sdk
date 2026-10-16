@@ -207,6 +207,88 @@ if (responseBoxMultipart.Answers.TryGetValue("mug", out var answerBoxMultipart) 
 }
 ```
 
+### Create an image request with multipart upload (dog example)
+``` csharp
+await using var foundDogImageStream = File.OpenRead("dog-found.jpg");
+await using var dogPosterImageStream = File.OpenRead("dog-poster.png");
+
+var requestImagesMultipart = new EvaluateRequest
+{
+    Model = "jev-latest",
+    State = new
+    {
+        photo = "a3f1c2e8-found"
+    },
+    Assets = new Dictionary<string, Asset>
+    {
+        ["a3f1c2e8-found"] = new Asset
+        {
+            Type = "image",
+            Part = "dog-found-photo"
+        },
+        ["77b0d4a1-poster"] = new Asset
+        {
+            Type = "image",
+            Part = "dog-poster-photo"
+        }
+    },
+    Questions = new Dictionary<string, Question>
+    {
+        ["same_dog"] = Question.Noul("Is the dog in `photo` the same dog as in this picture: 77b0d4a1-poster?"),
+        ["has_collar"] = Question.Noul("Is the dog in `photo` wearing a collar?"),
+        ["coat"] = Question.Choice(
+            "What is the coat of the dog in `photo` like?",
+            criteria: new Dictionary<string, object?>
+            {
+                ["short"] = "Short and smooth.",
+                ["long"] = "Long or feathered.",
+                ["curly"] = "Curly or wiry."
+            }),
+        ["collar_box"] = Question.Box("the collar in `photo`")
+    },
+};
+
+var responseImagesMultipart = await client.EvaluateImagesAsync(
+    requestImagesMultipart,
+    [
+        new MultipartImagePart
+        {
+            PartName = "dog-found-photo",
+            ImageStream = foundDogImageStream,
+            FileName = "dog-found.jpg",
+            ContentType = "image/jpeg"
+        },
+        new MultipartImagePart
+        {
+            PartName = "dog-poster-photo",
+            ImageStream = dogPosterImageStream,
+            FileName = "dog-poster.png",
+            ContentType = "image/png"
+        }
+    ]);
+
+if (responseImagesMultipart.Answers.TryGetValue("same_dog", out var sameDogAnswer))
+{
+    Console.WriteLine($"Noul:       {sameDogAnswer.Noul:0.###}");
+    Console.WriteLine($"Confidence: {sameDogAnswer.Confidence:0.###}");
+}
+
+if (responseImagesMultipart.Answers.TryGetValue("coat", out var coatAnswer))
+{
+    Console.WriteLine($"Choice:     {coatAnswer.Choice}");
+    Console.WriteLine($"Confidence: {coatAnswer.Confidence:0.###}");
+}
+
+if (responseImagesMultipart.Answers.TryGetValue("collar_box", out var collarBoxAnswer) && collarBoxAnswer.Box is not null)
+{
+    Console.WriteLine($"Top:        {collarBoxAnswer.Box.Top:0.###}");
+    Console.WriteLine($"Bottom:     {collarBoxAnswer.Box.Bottom:0.###}");
+    Console.WriteLine($"Left:       {collarBoxAnswer.Box.Left:0.###}");
+    Console.WriteLine($"Right:      {collarBoxAnswer.Box.Right:0.###}");
+    Console.WriteLine($"Confidence: {collarBoxAnswer.Confidence:0.###}");
+}
+```
+
 ---
 
 ### Sponsors

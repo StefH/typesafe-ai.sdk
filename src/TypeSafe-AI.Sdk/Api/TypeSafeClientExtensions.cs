@@ -31,6 +31,63 @@ public static class TypeSafeClientExtensions
     }
 
     /// <summary>
+    /// Sends an image-enabled request using multipart/form-data with a JSON <c>request</c> part and one or more image file parts.
+    /// </summary>
+    /// <param name="client">The API client.</param>
+    /// <param name="request">The request body that references image assets via <c>assets.*.part</c>.</param>
+    /// <param name="imageParts">The multipart image file parts to upload.</param>
+    /// <param name="cancellationToken">The optional cancellation token.</param>
+    /// <returns>One answer per question.</returns>
+    public static async Task<EvaluateResponse> EvaluateImagesAsync(
+        this ITypeSafeClient client,
+        EvaluateRequest request,
+        IEnumerable<MultipartImagePart> imageParts,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(imageParts);
+
+        using var multipart = new MultipartFormDataContent(MultipartBoundary);
+        var requestJson = JsonSerializer.Serialize(request);
+        multipart.Add(new StringContent(requestJson, Encoding.UTF8, "application/json"), "request");
+
+        var hasAnyImagePart = false;
+        foreach (var imagePart in imageParts)
+        {
+            ArgumentNullException.ThrowIfNull(imagePart);
+            if (string.IsNullOrWhiteSpace(imagePart.PartName))
+            {
+                throw new ArgumentException("Image part name cannot be null or whitespace.", nameof(imageParts));
+            }
+
+            var stream = imagePart.ImageStream;
+            ArgumentNullException.ThrowIfNull(stream);
+
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+            }
+
+            var imageContent = new StreamContent(stream);
+            imageContent.Headers.ContentType = new MediaTypeHeaderValue(imagePart.ContentType);
+            multipart.Add(imageContent, imagePart.PartName, imagePart.FileName);
+            hasAnyImagePart = true;
+        }
+
+        if (!hasAnyImagePart)
+        {
+            throw new ArgumentException("At least one image part is required.", nameof(imageParts));
+        }
+
+        await using var payloadStream = new MemoryStream();
+        await multipart.CopyToAsync(payloadStream, cancellationToken);
+        payloadStream.Position = 0;
+
+        return await client.EvaluateMultipartAsync(payloadStream, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
     /// Sends an image Box request using multipart/form-data with a JSON <c>request</c> part and a file part.
     /// </summary>
     /// <param name="client">The API client.</param>
@@ -41,32 +98,26 @@ public static class TypeSafeClientExtensions
     /// <param name="imageContentType">The image content type.</param>
     /// <param name="cancellationToken">The optional cancellation token.</param>
     /// <returns>One answer per question.</returns>
-    public static async Task<EvaluateResponse> EvaluateBoxAsync(
+    public static Task<EvaluateResponse> EvaluateBoxAsync(
         this ITypeSafeClient client,
         EvaluateRequest request,
         string imagePartName,
         Stream imageStream,
-        string fileName = "image.jpg",
-        string imageContentType = "image/jpeg",
+        string fileName,
+        string imageContentType,
         CancellationToken cancellationToken = default)
     {
-        if (imageStream.CanSeek)
-        {
-            imageStream.Position = 0;
-        }
-
-        using var multipart = new MultipartFormDataContent(MultipartBoundary);
-        var requestJson = JsonSerializer.Serialize(request);
-        multipart.Add(new StringContent(requestJson, Encoding.UTF8, "application/json"), "request");
-
-        var imageContent = new StreamContent(imageStream);
-        imageContent.Headers.ContentType = new MediaTypeHeaderValue(imageContentType);
-        multipart.Add(imageContent, imagePartName, fileName);
-
-        await using var payloadStream = new MemoryStream();
-        await multipart.CopyToAsync(payloadStream, cancellationToken);
-        payloadStream.Position = 0;
-
-        return await client.EvaluateBoxAsync(payloadStream, cancellationToken: cancellationToken);
+        return client.EvaluateImagesAsync(
+            request,
+            [
+                new MultipartImagePart
+                {
+                    PartName = imagePartName,
+                    ImageStream = imageStream,
+                    FileName = fileName,
+                    ContentType = imageContentType
+                }
+            ],
+            cancellationToken);
     }
 }
