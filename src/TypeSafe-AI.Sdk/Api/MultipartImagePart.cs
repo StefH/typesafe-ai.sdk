@@ -18,10 +18,10 @@ public sealed class MultipartImagePart
     /// <summary>
     /// The file name sent in multipart content disposition.
     /// </summary>
-    public string FileName { get; init; } = "image.jpg";
+    public required string FileName { get; init; }
 
     /// <summary>
     /// The content type sent for the image part.
     /// </summary>
-    public string ContentType { get; init; } = "image/jpeg";
+    public required string ContentType { get; init; }
 }

@@ -103,8 +103,8 @@ public static class TypeSafeClientExtensions
         EvaluateRequest request,
         string imagePartName,
         Stream imageStream,
-        string fileName = "image.jpg",
-        string imageContentType = "image/jpeg",
+        string fileName,
+        string imageContentType,
         CancellationToken cancellationToken = default)
     {
         return client.EvaluateImagesAsync(
