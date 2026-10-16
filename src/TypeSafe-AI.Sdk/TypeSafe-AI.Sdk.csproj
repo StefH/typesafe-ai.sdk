@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix>preview-06</VersionSuffix>
+    <VersionPrefix>0.0.2</VersionPrefix>
+    <!--<VersionSuffix>preview-06</VersionSuffix>-->
     <RootNamespace>TypeSafeAI.Sdk</RootNamespace>
     <Authors>Stef Heyenrath</Authors>
     <Company>TypeSafe-AI.Sdk</Company>

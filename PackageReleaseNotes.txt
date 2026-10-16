@@ -1,5 +1,6 @@
-# 0.0.1 (01 October 2026)
-- #1 Add initial code [enhancement]
+# 0.0.2 (16 October 2026)
 - #2 Small updates + add examples [enhancement]
+- #3 Update interface, upgrade NuGets and add Box [enhancement]
+- #4 Add support for Images [enhancement]
 
 The full release notes can be found here: https://github.com/StefH/typesafe-ai.sdk/blob/main/ReleaseNotes.md
